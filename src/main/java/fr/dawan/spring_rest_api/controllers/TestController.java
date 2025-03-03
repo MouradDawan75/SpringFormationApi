@@ -1,5 +1,9 @@
 package fr.dawan.spring_rest_api.controllers;
 
+import fr.dawan.spring_rest_api.dtos.LogDto;
+import fr.dawan.spring_rest_api.exceptions.AuthentificationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -10,6 +14,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/test")
 public class TestController {
+
+    private static Logger rootLogger = LoggerFactory.getLogger(TestController.class);
+    private static Logger debugLogger = LoggerFactory.getLogger("debugLogger");
 
     /*
     Doit founir des ressources (ends points) + méthodes d'accès
@@ -24,6 +31,8 @@ public class TestController {
     //@RequestMapping(value = "/test/m1", method = RequestMethod.GET)
     @GetMapping(value = "/m1", produces = "text/plain")
     public String m1(){
+        rootLogger.info(">>>> appel de m1....");
+        debugLogger.debug(">>>> debug m1..........");
         return "m1";
     }
 
@@ -74,5 +83,49 @@ public class TestController {
     public String m6(@RequestBody String message){
         return "m6 "+message;
     }
+
+    /*
+    Gestion des exceptions
+     */
+    @GetMapping(value = "/ex")
+    public String m7() throws Exception {
+        throw new Exception("erreur serveur......");
+    }
+
+    @GetMapping(value = "/ex-perso")
+    public String m8() throws AuthentificationException {
+        throw new AuthentificationException("Echec connexion......");
+    }
+/*
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<LogDto> handleException(){
+        LogDto logDto = new LogDto();
+        logDto.setCode(500);
+        logDto.setMessage("Erreur interne......");
+        logDto.setLogLevel(LogDto.LogLevel.ERROR);
+        logDto.setLogType(LogDto.LogType.EXCEPTION);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(logDto);
+    }
+
+    @ExceptionHandler(AuthentificationException.class)
+    public ResponseEntity<LogDto> handleAuthException(){
+        LogDto logDto = new LogDto();
+        logDto.setCode(403);
+        logDto.setMessage("Echec connexion......");
+        logDto.setLogLevel(LogDto.LogLevel.ERROR);
+        logDto.setLogType(LogDto.LogType.ACCESS);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(logDto);
+    }
+    */
+
+
+    /*
+    2 options possibles pour la gestion des exceptions:
+    - Niveau local (controller):
+    définir dans chaque controller une méthode pour chaque type d'exception possibles avec @ExceptionHandler
+    - Niveau global (application):
+    Définir un gestionnaire globale d'exceptions.
+
+     */
 
 }
