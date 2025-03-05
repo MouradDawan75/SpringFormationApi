@@ -1,9 +1,7 @@
 package fr.dawan.spring_rest_api;
 
-import fr.dawan.spring_rest_api.entities.Moto;
 import fr.dawan.spring_rest_api.entities.Product;
-import fr.dawan.spring_rest_api.entities.Vehicule;
-import fr.dawan.spring_rest_api.entities.Voiture;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,9 +11,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
-import org.springframework.core.env.MutablePropertySources;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -28,6 +28,16 @@ public class SpringRestApiApplication implements CommandLineRunner {
 	@Value("${java.home}")
 	private String javaHome;
 
+
+	@Bean
+	public RestTemplate getRestTemplate(){
+		return new RestTemplate();
+	}
+
+	@Bean
+	public PasswordEncoder getEncoder(){
+		return new BCryptPasswordEncoder();
+	}
 
 	/*
 	Accéder à l'environnement de Spring
