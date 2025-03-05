@@ -1,12 +1,21 @@
 package fr.dawan.spring_rest_api;
 
+import fr.dawan.spring_rest_api.entities.Moto;
 import fr.dawan.spring_rest_api.entities.Product;
+import fr.dawan.spring_rest_api.entities.Vehicule;
+import fr.dawan.spring_rest_api.entities.Voiture;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
+import org.springframework.core.env.MutablePropertySources;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,6 +34,8 @@ public class SpringRestApiApplication implements CommandLineRunner {
 	 */
 	@Autowired
 	private Environment environment;
+
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringRestApiApplication.class, args);
@@ -53,5 +64,40 @@ public class SpringRestApiApplication implements CommandLineRunner {
 		Product prod = new Product();
 		prod.setDescription("pc");
 		System.out.println(prod.getDescription());
+
+		Contact c = new Contact();
+		c.setFirstName("Fname");
+		c.setLastName("Lname");
+		ModelMapper mapper = new ModelMapper();
+
+		mapper.typeMap(Contact.class, ContactDto.class)
+				.addMappings(m -> {
+			m.map(src -> src.getFirstName(),ContactDto::setNom);
+			m.map(src -> src.getLastName(),ContactDto::setPrenom);
+
+		});
+
+
+		ContactDto dto = mapper.map(c, ContactDto.class);
+		System.out.println(dto);
+
+
+
 	}
+}
+
+@Getter
+@Setter
+class Contact{
+	private String firstName;
+	private String lastName;
+}
+
+
+@Getter
+@Setter
+@ToString
+class ContactDto{
+	private String nom;
+	private String prenom;
 }

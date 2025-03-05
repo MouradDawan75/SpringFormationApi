@@ -36,6 +36,8 @@ public class Product extends BaseEntity{
     //private byte[] image; // stocker le binaire de l'image en BD
     private String imagePath; // emplacement de l'image
 
+
+
     public enum ProductState{
         NEUF,EXCELLENT,MAUVAIS
     }

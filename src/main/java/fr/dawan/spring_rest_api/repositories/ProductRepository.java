@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    //lien doc finder method de Spring Data
+    //lien doc finders methods de Spring Data
     //https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html
 
     Product findByDescription(String key);
