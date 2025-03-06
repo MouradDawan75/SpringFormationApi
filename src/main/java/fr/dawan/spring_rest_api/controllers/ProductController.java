@@ -1,9 +1,9 @@
 package fr.dawan.spring_rest_api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.dawan.spring_rest_api.apidocs.ProductApi;
 import fr.dawan.spring_rest_api.dtos.CountDto;
 import fr.dawan.spring_rest_api.dtos.ProductDto;
-import fr.dawan.spring_rest_api.entities.Product;
 import fr.dawan.spring_rest_api.services.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,9 +23,11 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
+
 @RestController
 @RequestMapping("/api/products")
-public class ProductController {
+//@CrossOrigin(value = "*")
+public class ProductController implements ProductApi {
 
     @Autowired
     private IProductService productService;
@@ -36,7 +38,9 @@ public class ProductController {
     @Value("${storage.folder}")
     private String storageFolder;
 
+
     @GetMapping(value = {"/{page}/{size}/{description}", "/{page}/{size}"}, produces = "application/json")
+    @Override
     public List<ProductDto> getAllBy(@PathVariable("page") int page, @PathVariable("size") int size,
                                      @PathVariable(value = "description", required = false) Optional<String> description) throws Exception{
         if(description.isPresent()){
@@ -48,6 +52,7 @@ public class ProductController {
     }
 
     @GetMapping(value = {"/count/{description}", "/count"}, produces = "application/json")
+    @Override
     public CountDto countBy(@PathVariable(value = "description", required = false) Optional<String> description) throws Exception{
         if(description.isPresent()){
             return productService.countBy(description.get());
@@ -57,6 +62,7 @@ public class ProductController {
     }
 
     @DeleteMapping(value = "/delete/{id}", produces = "text/plain")
+    @Override
     public ResponseEntity<String> delete(@PathVariable("id") long id) throws Exception{
         ProductDto prod = productService.getById(id);
         if(prod == null){
@@ -68,6 +74,7 @@ public class ProductController {
     }
 
     @GetMapping(value = "/find/{id}")
+    @Override
     public ResponseEntity<Object> getById(@PathVariable("id") long id) throws Exception{
         ProductDto prod = productService.getById(id);
         if(prod == null){
@@ -78,6 +85,7 @@ public class ProductController {
     }
 
     @PostMapping(value = "/save", produces = "application/json", consumes = "multipart/form-data")
+    @Override
     public ResponseEntity<ProductDto> addProduct(@RequestParam("productString") String productString, @RequestParam("file") MultipartFile file) throws Exception{
 
         //Gestion du param productString: conversion en Product
@@ -100,6 +108,7 @@ public class ProductController {
     }
 
     @GetMapping(value = "/image/{productId}", produces = "application/octet-stream")
+    @Override
     public ResponseEntity<Resource> getProductImage(@PathVariable("productId") long id) throws Exception{
 
         ProductDto p = productService.getById(id);

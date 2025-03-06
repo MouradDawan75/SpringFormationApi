@@ -3,6 +3,8 @@ package fr.dawan.spring_rest_api.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -13,6 +15,10 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+/*
+@Audited: Hibernate Envers
+ */
+//@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED) //gestion des relations
 //@Entity(name = "t_products") si besoin de modifier le nom de la table
 public class Product extends BaseEntity{
 
@@ -64,5 +70,19 @@ public class Product extends BaseEntity{
 
     @ManyToMany(cascade = CascadeType.REMOVE, mappedBy = "products")
     private Set<Supplier> suppliers = new HashSet<>();
+
+    @PrePersist
+    public void prePersist(){
+        /*
+        remplir des tables.......
+         */
+    }
+
+    @PreRemove
+    public void preRemove(){
+        /*
+        conserver le product dans une tabe temporaire
+         */
+    }
 
 }

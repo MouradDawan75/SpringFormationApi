@@ -86,7 +86,7 @@ public class ProductServiceImpl implements IProductService{
         Category cat = categoryRepository.findById(productDto.getCategoryId()).get();
         p.setCategory(cat);
 
-        Product savedProduct = productRepository.save(p);
+        Product savedProduct = productRepository.saveAndFlush(p);
         /*
         save de JpaRepository gère l'ajout et la modif en BD
         si id == 0 -> génère la commande INSERT SQL

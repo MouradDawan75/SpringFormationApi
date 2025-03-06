@@ -8,14 +8,17 @@ import fr.dawan.spring_rest_api.exceptions.AuthentificationException;
 import fr.dawan.spring_rest_api.repositories.UserRepository;
 import fr.dawan.spring_rest_api.tools.DtoTool;
 import fr.dawan.spring_rest_api.tools.TokenSaver;
-import jakarta.transaction.Transactional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @Transactional
@@ -40,6 +43,17 @@ public class UserServiceImpl implements IUserService{
         }
 
         return result;
+    }
+
+    @Async
+    public CompletableFuture<List<UserDto>> getAllAsync() throws Exception {
+        List<UserDto> result = new ArrayList<>();
+        List<User> entities = userRepository.findAll();
+        for(User u : entities){
+            result.add(DtoTool.convert(u, UserDto.class));
+        }
+
+        return CompletableFuture.completedFuture(result);
     }
 
     @Override
@@ -67,7 +81,7 @@ public class UserServiceImpl implements IUserService{
 
         }
 
-        User savedUser = userRepository.save(user);
+        User savedUser = userRepository.saveAndFlush(user);
 
 
         return DtoTool.convert(savedUser, UserDto.class);
