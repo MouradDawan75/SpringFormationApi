@@ -85,6 +85,8 @@ public class ProductServiceImpl implements IProductService{
         //Gérer le ManyToOne avec Category
         Category cat = categoryRepository.findById(productDto.getCategoryId()).get();
         p.setCategory(cat);
+        //cat.getProducts().add(p);
+        //categoryRepository.deleteAllInBatch();
 
         Product savedProduct = productRepository.saveAndFlush(p);
         /*

@@ -12,6 +12,10 @@ public class MyTasks {
 
     private static Logger rootLogger = LoggerFactory.getLogger(MyTasks.class);
 
+    /*
+    Doc: https://spring.io/blog/2020/11/10/new-in-spring-5-3-improved-cron-expressions
+     */
+
     @Scheduled(fixedDelay = 3000) //temps en millisecondes
     @Async("myTaskExecutor")
     public void task1(){

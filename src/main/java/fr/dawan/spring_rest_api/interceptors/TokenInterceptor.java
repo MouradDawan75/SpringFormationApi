@@ -20,14 +20,16 @@ public class TokenInterceptor implements HandlerInterceptor {
     private static List<String> allowedUrls = List.of(
             "/api/users/create-account",
             "/login",
-            "/api-docs"
+            "/api-docs",
+            "/api/salaries"
                 );
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
 
-        if(!allowedUrls.contains(request.getRequestURI()) && !request.getRequestURI().contains("/swagger")){
+        if(!allowedUrls.contains(request.getRequestURI()) && !request.getRequestURI().contains("/swagger")
+                && !request.getRequestURI().contains("/api/salaries")){
             //Vérifier le Token
 
             String header = request.getHeader("Authorization");

@@ -2,9 +2,11 @@ package fr.dawan.spring_rest_api;
 
 import fr.dawan.spring_rest_api.entities.Product;
 
+import fr.dawan.spring_rest_api.entities.Salarie;
 import fr.dawan.spring_rest_api.interceptors.MyInterceptor;
 import fr.dawan.spring_rest_api.interceptors.TokenInterceptor;
 import fr.dawan.spring_rest_api.services.AsyncService;
+import fr.dawan.spring_rest_api.services.CacheSalarieService;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import lombok.Getter;
@@ -74,6 +76,9 @@ public class SpringRestApiApplication implements CommandLineRunner {
 
 	@Autowired
 	private TokenInterceptor tokenInterceptor;
+
+	@Autowired
+	private CacheSalarieService salarieService;
 
 
 	//Maj de la configuration du module MVC: ajout d'un intercepteur
@@ -151,6 +156,20 @@ CORS: CROSS ORIGIN RESOURCES SHARING
 		CompletableFuture<String> resul = asyncService.methodWithReturn();
 		System.out.println(resul.get());
 
+		if(salarieService.getAll().size() == 0) {
+
+			System.out.println(">>> insertion des salariés");
+
+			Salarie s1 = new Salarie();
+			s1.setNom("DUPONT");
+			s1.setPrenom("Jean");
+			salarieService.save(s1);
+
+			Salarie s2 = new Salarie();
+			s2.setNom("DAWAN");
+			s2.setPrenom("Paris");
+			salarieService.save(s2);
+		}
 
 	}
 }
